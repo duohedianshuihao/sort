@@ -3,7 +3,6 @@ from Tkinter import *
 import random, math, time
 
 
-
 def generate_array():
 	L = []
 	for x in xrange(1,150):
@@ -130,36 +129,56 @@ def ShellSort(L, rectangle, draw_on):
 			draw_on.update()
 		
 
-
-# def MergeSort(L, rectangle, draw_on):
-# 	if len(L) <= 1:	return L, rectangle
-# 	n = int(len(L)/2)
-# 	left, left_rectangle = MergeSort(L[:n], rectangle[:n], draw_on)
-# 	right, right_rectangle = MergeSort(L[n:], rectangle[n:], draw_on)
-# 	l, r = 0, 0
-# 	result = []
-# 	result_rectangle = []
-# 	while l < len(left) and r < len(right) :
-# 		time.sleep(0.01)
-# 		if left[l] > right[r] :
-# 			result.append(left[l])
-# 			result_rectangle.append(left_rectangle[l])
-# 			l += 1
-# 		else :  ## ji ou shu kao lv jin qu!!!
-# 			result.append(right[r])
-# 			result_rectangle.append(right_rectangle[r])
-# 			draw_on.move(right_rectangle[r], -6*(len(left)+r-l), 0)
-# 			for i in xrange(l, len(left)):
-# 				draw_on.move(left_rectangle[i], 6, 0)
-# 			for i in xrange(0, r-1):
-# 				draw_on.move(right_rectangle[i], 6, 0)
-# 			draw_on.update()
-# 			r += 1	
-# 	result += left[l:]
-# 	result += right[r:]
-# 	result_rectangle += left_rectangle[l:]
-# 	result_rectangle += right_rectangle[r:]
-# 	return result, result_rectangle
+ 
+def MergeSort(L, rectangle, draw_on):
+	if len(L) <= 1:	return L, rectangle
+	n = int(len(L)/2)
+	left, left_rectangle = MergeSort(L[:n], rectangle[:n], draw_on)
+	right, right_rectangle = MergeSort(L[n:], rectangle[n:], draw_on)
+	l, r = 0, 0
+	result = []
+	result_rectangle = []
+	while l < len(left) and r < len(right) :
+		draw_on.itemconfig(left_rectangle[l], fill = 'red')
+		draw_on.itemconfig(right_rectangle[r], fill = 'red')
+		draw_on.update()
+		time.sleep(0.05)
+		if left[l] > right[r] :
+			result.append(left[l])
+			result_rectangle.append(left_rectangle[l])
+			time.sleep(0.05)
+			draw_on.itemconfig(left_rectangle[l], fill = 'blue')
+			draw_on.update()
+			l += 1
+			if r == len(right)-1 :
+				draw_on.itemconfig(right_rectangle[r], fill = 'blue')
+				draw_on.update()
+		else :  
+			result.append(right[r])
+			result_rectangle.append(right_rectangle[r])
+			draw_on.itemconfig(left_rectangle[l], fill = 'blue')
+			draw_on.move(right_rectangle[r], -6*(len(left)-l), 0)
+			for i in xrange(l, len(left)):
+				draw_on.move(left_rectangle[i], 6, 0)
+			time.sleep(0.025)
+			draw_on.itemconfig(right_rectangle[r], fill = 'blue')
+			draw_on.update()
+			time.sleep(0.025)
+			r += 1	
+	for x in xrange(0,len(left)):
+		draw_on.itemconfig(left_rectangle[x], fill = 'green')
+		draw_on.itemconfig(right_rectangle[x], fill = 'green')
+		draw_on.update()
+	time.sleep(0.1)
+	for x in xrange(0,len(left)):
+		draw_on.itemconfig(left_rectangle[x], fill = 'blue')
+		draw_on.itemconfig(right_rectangle[x], fill = 'blue')
+		draw_on.update()
+	result += left[l:]
+	result += right[r:]
+	result_rectangle += left_rectangle[l:]
+	result_rectangle += right_rectangle[r:]
+	return result, result_rectangle    
 
 def Button_BubbleSort():
 	draw_on.delete("all")
@@ -181,7 +200,20 @@ def Button_ShellSort():
 	L = generate_array()
 	ShellSort(L, draw(L, draw_on), draw_on)
 
-	
+def Button_MergeSort():
+	draw_on.delete("all")
+	L = generate_array()
+	MergeSort(L, draw(L, draw_on), draw_on)
+
+def Button_QuickSort():
+	draw_on.delete("all")
+	L = generate_array()
+	#QuickSort(L, draw(L, draw_on), draw_on)
+def Button_HeapSort():
+	draw_on.delete("all")
+	L = generate_array()
+	#HeapSort(L, draw(L, draw_on), draw_on)
+
 			
 root = Tk() 
 frame_button = Frame(root)
@@ -192,13 +224,12 @@ b_Bubble = Button(frame_button, text = "Bubble", width = 4, height = 1, command 
 b_Select = Button(frame_button, text = "Select", width = 4, height = 1, command = Button_SelectSort).pack(side = LEFT)
 b_Insertion = Button(frame_button, text = "Insertion", width = 4, height = 1, command = Button_InsertionSort).pack(side = LEFT)
 b_Shell = Button(frame_button, text = "Shell", width = 4, height = 1, command = Button_ShellSort).pack(side = LEFT)
-# b_Shell = Button(root, text = "Shell", width = 4, height = 2, command = Button_ShellSort).pack(side = TOP, fill = Y)
-# b_Shell = Button(root, text = "Shell", width = 4, height = 2, command = Button_ShellSort).pack(side = TOP, fill = Y)
-# b_Shell = Button(root, text = "Shell", width = 4, height = 2, command = Button_ShellSort).pack(side = TOP, fill = Y)
-# b_Shell = Button(root, text = "Shell", width = 4, height = 2, command = Button_ShellSort).pack(side = TOP, fill = Y)
+b_Merge = Button(frame_button, text = "Merge", width = 4, height = 1, command = Button_MergeSort).pack(side = LEFT) 
+b_Quick = Button(frame_button, text = "Quick", width = 4, height = 1, command = Button_QuickSort).pack(side = LEFT)
+b_Heap = Button(frame_button, text = "Heap", width = 4, height = 1, command = Button_HeapSort).pack(side = LEFT)
 
 draw_on = Canvas(frame_draw, bg = 'white', height = 700, width = 1000)
 draw_on.pack() 
 L = generate_array()
 draw(L, draw_on)
-root.mainloop()
+root.mainloop() 
