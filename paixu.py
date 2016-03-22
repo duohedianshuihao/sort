@@ -53,7 +53,7 @@ def SelectSort(L, rectangle, draw_on):
 			draw_on.itemconfig(rectangle[min], fill = 'red')
 			draw_on.itemconfig(rectangle[j], fill = 'red')
 			draw_on.update()
-			time.sleep(0.05)
+			time.sleep(0.01)
 			if L[j] > L[min] :
 				draw_on.itemconfig(rectangle[min], fill = 'blue')
 				draw_on.update()
@@ -129,7 +129,6 @@ def ShellSort(L, rectangle, draw_on):
 			draw_on.update()
 		
 
- 
 def MergeSort(L, rectangle, draw_on):
 	if len(L) <= 1:	return L, rectangle
 	n = int(len(L)/2)
@@ -180,6 +179,56 @@ def MergeSort(L, rectangle, draw_on):
 	result_rectangle += right_rectangle[r:]
 	return result, result_rectangle    
 
+
+def QuickSort(L, rectangle, draw_on):
+	return quick_sort(L, 0, len(L)-1, rectangle, draw_on)
+
+def quick_sort(L, left, right, rectangle, draw_on):
+	if left >=right: return L
+	key = L[left]
+	draw_on.itemconfig(rectangle[left], fill = 'green')
+	draw_on.update()
+	lp = left
+	rp = right
+	while lp < rp : 
+		if lp != left :
+			draw_on.itemconfig(rectangle[lp], fill = 'red')
+		draw_on.itemconfig(rectangle[rp], fill = 'red')
+		draw_on.update()
+		time.sleep(0.1)
+		while L[rp] <= key and lp < rp :
+			draw_on.itemconfig(rectangle[rp], fill = 'blue')
+			rp -= 1
+			draw_on.itemconfig(rectangle[rp], fill = 'red')
+			draw_on.update()
+		while L[lp] >= key and lp < rp :
+			if lp != left:
+				draw_on.itemconfig(rectangle[lp], fill = 'blue')
+			lp += 1
+			draw_on.itemconfig(rectangle[lp], fill = 'red')
+			draw_on.update()
+		L[lp], L[rp] = L[rp], L[lp]
+		draw_on.move(rectangle[lp], 6*(rp-lp), 0)
+		draw_on.move(rectangle[rp], 6*(lp-rp), 0)
+		draw_on.update()
+		rectangle[lp], rectangle[rp] = rectangle[rp], rectangle[lp]
+	L[left], L[lp] = L[lp], L[left]
+	draw_on.move(rectangle[left], 6*(lp-left), 0)
+	draw_on.move(rectangle[lp], 6*(left-lp), 0)
+	draw_on.itemconfig(rectangle[lp], fill = 'blue') 
+	draw_on.itemconfig(rectangle[left], fill = 'blue')
+	draw_on.update()
+	rectangle[left], rectangle[lp] = rectangle[lp], rectangle[left] 
+	quick_sort(L, left, lp-1, rectangle, draw_on)
+	for x in xrange(lp-1, rp+2):
+		time.sleep(0.0001)
+		draw_on.itemconfig(rectangle[x], fill = 'green')
+		draw_on.update()
+	quick_sort(L, rp+1, right, rectangle, draw_on)
+	return L  
+ 
+  
+
 def Button_BubbleSort():
 	draw_on.delete("all")
 	L = generate_array()
@@ -208,14 +257,14 @@ def Button_MergeSort():
 def Button_QuickSort():
 	draw_on.delete("all")
 	L = generate_array()
-	#QuickSort(L, draw(L, draw_on), draw_on)
+	QuickSort(L, draw(L, draw_on), draw_on)
 def Button_HeapSort():
 	draw_on.delete("all")
 	L = generate_array()
 	#HeapSort(L, draw(L, draw_on), draw_on)
 
 			
-root = Tk() 
+root = Tk()
 frame_button = Frame(root)
 frame_button.pack(side = TOP)
 frame_draw = Frame(root)
