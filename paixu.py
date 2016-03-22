@@ -195,7 +195,7 @@ def quick_sort(L, left, right, rectangle, draw_on):
 			draw_on.itemconfig(rectangle[lp], fill = 'red')
 		draw_on.itemconfig(rectangle[rp], fill = 'red')
 		draw_on.update()
-		time.sleep(0.1)
+		time.sleep(0.01)
 		while L[rp] <= key and lp < rp :
 			draw_on.itemconfig(rectangle[rp], fill = 'blue')
 			rp -= 1
@@ -227,8 +227,39 @@ def quick_sort(L, left, right, rectangle, draw_on):
 	quick_sort(L, rp+1, right, rectangle, draw_on)
 	return L  
  
+def HeapSort(L, rectangle, draw_on):
+	n = len(L)
+	first = int(n/2-1)       
+	for start in xrange(first, -1, -1) :     
+		max_heapify(L,start, n-1, rectangle, draw_on)
+	for end in xrange(n-1, 0, -1):           
+		L[end], L[0] = L[0], L[end]
+		draw_on.move(rectangle[0], 6*(end-0), 0)
+		draw_on.move(rectangle[end], 6*(0-end), 0)
+		draw_on.update()
+		rectangle[0], rectangle[end] = rectangle[end], rectangle[0]
+		max_heapify(L, 0, end-1, rectangle, draw_on)
+	return L
+ 
+def max_heapify(L, start, end, rectangle, draw_on) :
+	root = start
+	while True :
+		child = root*2 +1               
+		time.sleep(0.01)
+		if child > end : break
+		if child+1 <= end and L[child] > L[child+1] :
+			child = child+1            
+		if L[root] > L[child] :    
+			L[root], L[child] = L[child], L[root]
+			draw_on.move(rectangle[root], 6*(child-root), 0)   
+			draw_on.move(rectangle[child], 6*(root-child), 0)
+			draw_on.update()
+			rectangle[root], rectangle[child] = rectangle[child], rectangle[root]
+			root = child
+		else :
+			break  
   
-
+ 
 def Button_BubbleSort():
 	draw_on.delete("all")
 	L = generate_array()
@@ -261,7 +292,7 @@ def Button_QuickSort():
 def Button_HeapSort():
 	draw_on.delete("all")
 	L = generate_array()
-	#HeapSort(L, draw(L, draw_on), draw_on)
+	HeapSort(L, draw(L, draw_on), draw_on)
 
 			
 root = Tk()
