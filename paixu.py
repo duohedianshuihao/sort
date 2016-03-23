@@ -255,10 +255,6 @@ def max_heapify(L, start, end, rectangle, draw_on) :
 			break
 		if child+1 <= end and L[child] > L[child+1] :
 			child = child+1  
-			time.sleep(0.01)          
-			# draw_on.itemconfig(rectangle[child-1], fill = 'blue')
-			# draw_on.itemconfig(rectangle[child], fill = 'red')
-			# draw_on.update()
 		if L[root] > L[child] :    
 			L[root], L[child] = L[child], L[root]
 			draw_on.move(rectangle[root], 6*(child-root), 0)   
